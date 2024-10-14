@@ -1,0 +1,49 @@
+.books_section {
+    padding: 50px 0px;
+}
+
+.book_list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.book_card {
+    padding: 16px;
+    border-radius: 12px;
+    background-color: var(--color8)
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination .active {}
+
+.pagination button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.pagination .disabled {
+    cursor: default !important;
+    opacity: .5;
+}
+
+@media(min-width:768px) {
+
+
+    .book_list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media(min-width:1024px) {
+
+
+    .book_list {
+        gap: 16px;
+    }
+}

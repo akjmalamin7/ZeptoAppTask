@@ -1,0 +1,17 @@
+.header_section {
+    height: 48px;
+    width: 100%px;
+    /* background-color: var(--header_bg); */
+    border-bottom: var(--header_border_bottom);
+    color: var(--color7)
+}
+
+
+
+
+
+@media(min-width:768px) {
+    .header_section {
+        height: 70px;
+    }
+}
