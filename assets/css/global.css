@@ -1,40 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    outline: none;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
 }
 
 :root {
-    --color1: #ffffff;
-    --color2: #000000;
-    --color3: #0D1213;
-    --color4: #151D1E;
-    --color5: #181d1e;
-    --color6: #EEF1F1;
-    --color7: #D7D7DB;
-    --color8: #1A273F;
-    --body_bg: var(--color3);
-    --header_bg: var(--color4);
-    --header_border_bottom: 1px solid var(--color5);
+  --color1: #ffffff;
+  --color2: #000000;
+  --color3: #0d1213;
+  --color4: #151d1e;
+  --color5: #181d1e;
+  --color6: #eef1f1;
+  --color7: #d7d7db;
+  --color8: #1a273f;
+  --color9: #66898f;
+  --body_bg: var(--color3);
+  --header_bg: var(--color4);
+  --header_border_bottom: 1px solid var(--color5);
+  --input_field_border_color: 1px solid var(--color9);
+  --input_text_color: var(--color6);
+  --placeholder_color: var(--color7);
+  --option_color: var(--color3);
+
+  /* font family */
+  --font_family: "Inter", sans-serif;
 }
 
 body {
-    background-color: var(--body_bg);
-    color: var(--color6);
+  background-color: var(--body_bg);
+  color: var(--color6);
+  font-family: var(--font_family);
 }
 
 .container {
-    max-width: 1320px;
-    width: 100%;
-    padding: 0px 20px;
-    margin: 0 auto;
+  max-width: 1320px;
+  width: 100%;
+  padding: 0px 20px;
+  margin: 0 auto;
+}
+input,
+select {
+  height: 32px;
+  background-color: transparent;
+  border: var(--input_field_border_color);
+  border-radius: 8px;
+  width: 100%;
+  font-size: 12px;
+  color: var(--input_text_color);
+  padding: 0px 12px;
+}
+select option {
+  color: var(--option_color);
 }
 
-@media(min-width:1024px) {
-    button {
-        cursor: pointer;
-    }
+::placeholder {
+  color: var(--placeholder_color);
+}
+@media (min-width: 1024px) {
+  input,
+  select {
+    height: 38px;
+    font-size: 14px;
+  }
+}
+@media (min-width: 1024px) {
+  button {
+    cursor: pointer;
+  }
 }
