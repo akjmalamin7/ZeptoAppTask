@@ -1,13 +1,11 @@
 (async () => {
   const url = "https://gutendex.com/books/";
-  const booksPerPage = 5;
+  const booksPerPage = 8;
   let currentPage = 0; // Initialize currentPage here
   let booksData = [];
   let filteredBooksData = [];
-  const wishListIcon =
-    "https://img.icons8.com/material-outlined/24/ffffff/like--v1.png"; // Unliked icon
-  const wishListedIcon =
-    "https://img.icons8.com/material-outlined/24/ff0000/like--v1.png"; // Liked icon
+  const wishListIcon = "assets/images/wishlist_stroke.png"; // Unliked icon
+  const wishListedIcon = "assets/images/wishlist_fill.png"; // Liked icon
 
   const select_elements = {
     book_list: document.getElementById("book_list"),
@@ -42,7 +40,7 @@
     const endIndex = startIndex + booksPerPage;
 
     if (!filteredBooksData.length) {
-      book_list.innerHTML = '<h1 style="color:#ffffff;">No books found.</h1>';
+      book_list.innerHTML = '<h2">No books found.</h2>';
       return;
     }
     booksCard(filteredBooksData.slice(startIndex, endIndex));
@@ -86,13 +84,13 @@
                             : "Not specified"
                         }</p>
                     </div>
-                    <div class="wishlist" onclick="toggleWishlist(${JSON.stringify(
+                    <button class="wishlist" onclick="toggleWishlist(${JSON.stringify(
                       book
                     ).replace(/"/g, "&quot;")})">
                         <img src="${
                           isWishlisted ? wishListedIcon : wishListIcon
                         }" />
-                    </div>
+                    </button>
                 </div>
             `;
     });
@@ -111,6 +109,7 @@
 
     // Prev Button
     const prevButton = document.createElement("button");
+    prevButton.className = "prev";
     prevButton.textContent = "Prev";
     prevButton.disabled = currentPage === 0;
     prevButton.onclick = () => {
@@ -127,6 +126,7 @@
 
     // Next Button
     const nextButton = document.createElement("button");
+    nextButton.className = "next";
     nextButton.textContent = "Next";
     nextButton.disabled = currentPage >= totalPages - 1;
     nextButton.onclick = () => {
