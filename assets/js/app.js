@@ -1,24 +1,29 @@
 (async () => {
   const url = "https://gutendex.com/books/";
   const booksPerPage = 8;
-  let currentPage = 0; // Initialize currentPage here
+  let currentPage = 0;
   let booksData = [];
   let filteredBooksData = [];
-  const wishListIcon = "assets/images/wishlist_stroke.png"; // Unliked icon
-  const wishListedIcon = "assets/images/wishlist_fill.png"; // Liked icon
+  /* *** wishlist icons *** */
+  const wishListIcon = "assets/images/wishlist_stroke.png";
+  const wishListedIcon = "assets/images/wishlist_fill.png";
 
+  /* select element */
   const select_elements = {
     book_list: document.getElementById("book_list"),
     pagination: document.getElementById("pagination"),
     search_input: document.getElementById("search_input"),
     genre_filter: document.getElementById("genre_filter"),
   };
-
+  const { book_list, pagination, search_input, genre_filter } = select_elements;
+  book_list.innerHTML = "Loading...";
+  pagination.innerHTML = "Loading...";
+  /* fetch API */
   const fetchBooks = async () => {
-    let storedBooks = localStorage.getItem("booksData");
+    let getBooksFromLocalStorage = localStorage.getItem("booksData");
 
-    if (storedBooks) {
-      booksData = JSON.parse(storedBooks);
+    if (getBooksFromLocalStorage) {
+      booksData = JSON.parse(getBooksFromLocalStorage);
       filteredBooksData = [...booksData];
       populateGenres();
       displayPage();
@@ -32,8 +37,6 @@
       displayPage();
     }
   };
-
-  const { book_list, pagination, search_input, genre_filter } = select_elements;
 
   function displayPage() {
     const startIndex = currentPage * booksPerPage;
@@ -65,7 +68,7 @@
     let bookCards = "";
 
     books.forEach((book) => {
-      const isWishlisted = isBookWishlisted(book.id); // Check if the book is in the wishlist
+      const isWishListed = isBookWishListed(book.id);
       bookCards += `
                 <div class="book_card">
                     <div class="book_image">
@@ -74,7 +77,9 @@
                         }" lazy="loading"/>
                     </div>
                     <div class="book_info">
-                        <h3>${book.title}</h3>
+                        <h3><a href="/details.html?id=${book.id}">${
+        book.title
+      }</a></h3>
                         <p><strong>Author:</strong> ${
                           book?.authors[0]?.name || "Unknown"
                         }</p>
@@ -88,7 +93,7 @@
                       book
                     ).replace(/"/g, "&quot;")})">
                         <img src="${
-                          isWishlisted ? wishListedIcon : wishListIcon
+                          isWishListed ? wishListedIcon : wishListIcon
                         }" />
                     </button>
                 </div>
@@ -97,13 +102,13 @@
     book_list.innerHTML = bookCards;
   }
 
-  function isBookWishlisted(bookId) {
+  function isBookWishListed(bookId) {
     const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
     return wishlist.some((item) => item.id === bookId); // Check if book is in the wishlist
   }
 
   function updatePagination() {
-    pagination.innerHTML = ""; // Pagination Clear
+    pagination.innerHTML = "";
 
     const totalPages = Math.ceil(filteredBooksData.length / booksPerPage);
 
@@ -112,10 +117,11 @@
     prevButton.className = "prev";
     prevButton.textContent = "Prev";
     prevButton.disabled = currentPage === 0;
-    prevButton.onclick = () => {
+    prevButton.addEventListener("click", () => {
       currentPage--;
       displayPage();
-    };
+    });
+
     pagination.appendChild(prevButton);
 
     // Pagination Numbers
@@ -129,10 +135,10 @@
     nextButton.className = "next";
     nextButton.textContent = "Next";
     nextButton.disabled = currentPage >= totalPages - 1;
-    nextButton.onclick = () => {
+    nextButton.addEventListener("click", () => {
       currentPage++;
       displayPage();
-    };
+    });
     pagination.appendChild(nextButton);
   }
 
@@ -142,7 +148,6 @@
       pageNumbers.push(i);
     }
 
-    // Show page numbers with '...'
     const visiblePages = [];
 
     if (currentPage < 3) {
@@ -167,23 +172,22 @@
     const pageNumberButton = document.createElement("button");
     if (num === "...") {
       pageNumberButton.textContent = "...";
-      pageNumberButton.disabled = true; // Disable ... button
+      pageNumberButton.disabled = true;
     } else {
       pageNumberButton.textContent = num;
       pageNumberButton.onclick = () => {
-        currentPage = num - 1; // 0-indexed
+        currentPage = num - 1;
         displayPage();
       };
     }
 
     if (num === currentPage + 1) {
-      pageNumberButton.classList.add("active"); // Add active class
+      pageNumberButton.classList.add("active");
     }
 
     return pageNumberButton;
   }
 
-  // Populate genre filter dropdown
   function populateGenres() {
     const genres = new Set();
     booksData.forEach((book) => {
@@ -198,17 +202,14 @@
     });
   }
 
-  // Event listener for search input
   search_input.addEventListener("input", (event) => {
     filterBooks();
   });
 
-  // Event listener for genre filter
   genre_filter.addEventListener("change", (event) => {
     filterBooks();
   });
 
-  // Function to filter books based on search and genre
   function filterBooks() {
     const searchTerm = search_input.value.toLowerCase();
     const selectedGenre = genre_filter.value;
@@ -221,10 +222,9 @@
       return matchesSearch && matchesGenre;
     });
 
-    currentPage = 0; // Reset to the first page whenever filters change
+    currentPage = 0;
     displayPage();
   }
 
-  // Fetch books and display the first page
   await fetchBooks();
 })();
