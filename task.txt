@@ -1,0 +1,13 @@
+I have completed the task that you have given me. 
+I have  done these features:
+    1. show books
+    2. pagination
+    3. wishlist (with toggle button)
+    4. wishlist page
+    5. books details page
+#####################################################
+What API did you provide me, its do respond very slowly. 
+That is why, I stored books in localStorage after the API
+call and showing from there.I did not do the pagination 
+through the API query due to the API being slow.
+I have taken the data from the local area.

@@ -1,33 +1,24 @@
-// Fetching the element where wishlist books will be shown
 let wishlistBooksList = document.getElementById("wishlist_book_list");
-/* *** wishlist icons *** */
 const wishListIcon = "assets/images/wishlist_stroke.png";
 const wishListedIcon = "assets/images/wishlist_fill.png";
-// Toggle Wishlist: Add or remove book from the wishlist
+
 window.toggleWishlist = function (book) {
-  // Get wishlist from localStorage
   let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
   const existingBookIndex = wishlist.findIndex((item) => item.id === book.id);
 
   if (existingBookIndex > -1) {
-    wishlist.splice(existingBookIndex, 1); // Remove book from wishlist if already present
+    wishlist.splice(existingBookIndex, 1);
   } else {
-    wishlist.push(book); // Add entire book object to wishlist
+    wishlist.push(book);
   }
-
-  // Update localStorage
   localStorage.setItem("wishlist", JSON.stringify(wishlist));
-
-  // Update the wishlist view after adding/removing the book
-  wishListBookCard(); // Refresh the list
+  wishListBookCard();
 };
 
-// Function to generate wishlist book cards
 function wishlistBooksCard(books) {
-  let bookCards = ""; // Initializing card container
-
+  let bookCards = "";
   books.forEach((book) => {
-    const isWishListed = isBookWishListed(book.id); // Check if book is already wishlisted
+    const isWishListed = isBookWishListed(book.id);
     bookCards += `
       <div class="book_card">
         <div class="book_image">
@@ -36,7 +27,7 @@ function wishlistBooksCard(books) {
     }"/>
         </div>
         <div class="book_info">
-          <h3>${book.title}</h3>
+          <h3><a href="/details.html?id=${book.id}">${book.title} </a/</h3>
           <p><strong>Author:</strong> ${book?.authors[0]?.name || "Unknown"}</p>
           <p><strong>Genre:</strong> ${
             book?.subjects.length > 0 ? book.subjects[0] : "Not specified"
@@ -52,12 +43,8 @@ function wishlistBooksCard(books) {
       </div>
     `;
   });
-
-  // Display the generated cards in the wishlistBooksList container
   wishlistBooksList.innerHTML = bookCards;
 }
-
-// Function to fetch and display wishlist books
 function wishListBookCard() {
   const wishlistBooks = JSON.parse(localStorage.getItem("wishlist")) || [];
   if (wishlistBooks.length > 0) {
@@ -66,12 +53,8 @@ function wishListBookCard() {
     wishlistBooksList.innerHTML = "<p>No books in wishlist</p>";
   }
 }
-
-// Function to check if a book is wishlisted
 function isBookWishListed(bookId) {
   const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-  return wishlist.some((item) => item.id === bookId); // Check if book is in the wishlist
+  return wishlist.some((item) => item.id === bookId);
 }
-
-// Initially load wishlist books when the page loads
 document.addEventListener("DOMContentLoaded", wishListBookCard);

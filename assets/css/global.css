@@ -14,6 +14,8 @@
   --color4: #e8e8e8;
   --color5: #555555;
   --color6: #676a6b;
+  --color7: red;
+  --color8: #f7f7f7;
 
   --body_bg: var(--color1);
   --body_text_color: var(--color6);
@@ -22,6 +24,7 @@
   --placeholder_color: var(--color3);
   --option_color: var(--color3);
 
+  --errorColor: var(--color7);
   --header_bg: var(--color1);
   --header_shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   --menu_text_color: var(--color2);
@@ -33,6 +36,8 @@
   --pagination_btn_border_color: var(--color4);
   --pagination_active_btn_bg: var(--color2);
   --pagination_active_btn_color: var(--color1);
+
+  --breadcrumb_bg: var(--color8);
 
   /* font family */
   --font_family: "Inter", sans-serif;
@@ -54,6 +59,9 @@ h1,
 h2,
 h3,
 h4 {
+  color: var(--title_color);
+}
+h3 a {
   color: var(--title_color);
 }
 ul {
@@ -83,7 +91,10 @@ select option {
 ::placeholder {
   color: var(--placeholder_color);
 }
-
+#error_message {
+  color: var(--errorColor);
+  font-weight: bold;
+}
 /* header */
 .header_section {
   padding: 16px 0px;
@@ -94,6 +105,7 @@ select option {
 .header_section nav ul {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
 }
 .header_section nav ul li a {
@@ -102,6 +114,20 @@ select option {
   font-weight: 450;
 }
 
+/* breadcrumb */
+.breadcrumb {
+  padding: 50px 20px;
+  background-color: var(--breadcrumb_bg);
+}
+.breadcrumb_container {
+  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.wishlist_heading {
+  text-align: center;
+}
 /* *** pagination *** */
 .pagination {
   margin-top: 30px;

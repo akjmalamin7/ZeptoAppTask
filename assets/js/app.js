@@ -1,5 +1,5 @@
 (async () => {
-  const url = "https://gutendex.com/books/";
+  const url = "https://gutendex.com/books";
   const booksPerPage = 8;
   let currentPage = 0;
   let booksData = [];
@@ -18,6 +18,7 @@
   const { book_list, pagination, search_input, genre_filter } = select_elements;
   book_list.innerHTML = "Loading...";
   pagination.innerHTML = "Loading...";
+
   /* fetch API */
   const fetchBooks = async () => {
     let getBooksFromLocalStorage = localStorage.getItem("booksData");
@@ -38,81 +39,77 @@
     }
   };
 
+  /* function to display the books on the current page */
   function displayPage() {
     const startIndex = currentPage * booksPerPage;
     const endIndex = startIndex + booksPerPage;
-
     if (!filteredBooksData.length) {
-      book_list.innerHTML = '<h2">No books found.</h2>';
+      book_list.innerHTML = "<h2>No books found.</h2>";
       return;
     }
     booksCard(filteredBooksData.slice(startIndex, endIndex));
     updatePagination();
   }
 
+  /* function to toggle the wishlist status of a book */
   window.toggleWishlist = function (book) {
     let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
     const existingBookIndex = wishlist.findIndex((item) => item.id === book.id);
 
     if (existingBookIndex > -1) {
-      wishlist.splice(existingBookIndex, 1); // Remove from wishlist
+      wishlist.splice(existingBookIndex, 1);
     } else {
-      wishlist.push(book); // Add entire book object to wishlist
+      wishlist.push(book);
     }
 
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    displayPage(); // Refresh display to show updated wishlist status
+    displayPage();
   };
 
+  /* function to generate HTML for each book card and display them */
   function booksCard(books) {
     let bookCards = "";
 
     books.forEach((book) => {
       const isWishListed = isBookWishListed(book.id);
       bookCards += `
-                <div class="book_card">
-                    <div class="book_image">
-                        <img src="${
-                          book?.formats["image/jpeg"]
-                        }" lazy="loading"/>
-                    </div>
-                    <div class="book_info">
-                        <h3><a href="/details.html?id=${book.id}">${
-        book.title
-      }</a></h3>
-                        <p><strong>Author:</strong> ${
-                          book?.authors[0]?.name || "Unknown"
-                        }</p>
-                        <p><strong>Genre:</strong> ${
-                          book?.subjects.length > 0
-                            ? book.subjects[0]
-                            : "Not specified"
-                        }</p>
-                    </div>
-                    <button class="wishlist" onclick="toggleWishlist(${JSON.stringify(
-                      book
-                    ).replace(/"/g, "&quot;")})">
-                        <img src="${
-                          isWishListed ? wishListedIcon : wishListIcon
-                        }" />
-                    </button>
-                </div>
-            `;
+        <div class="book_card">
+            <div class="book_image">
+                <img src="${book?.formats["image/jpeg"]}" lazy="loading"/>
+            </div>
+            <div class="book_info">
+                <h3><a href="/details.html?id=${book.id}">${book.title}</a></h3>
+                <p><strong>Author:</strong> ${
+                  book?.authors[0]?.name || "Unknown"
+                }</p>
+                <p><strong>Genre:</strong> ${
+                  book?.subjects.length > 0 ? book.subjects[0] : "Not specified"
+                }</p>
+            </div>
+            <button class="wishlist" onclick="toggleWishlist(${JSON.stringify(
+              book
+            ).replace(/"/g, "&quot;")})">
+                <img src="${isWishListed ? wishListedIcon : wishListIcon}" />
+            </button>
+        </div>
+      `;
     });
     book_list.innerHTML = bookCards;
   }
 
+  /* function to check if a book is wishlisted */
   function isBookWishListed(bookId) {
     const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    return wishlist.some((item) => item.id === bookId); // Check if book is in the wishlist
+    return wishlist.some((item) => item.id === bookId);
   }
 
+  /*  update pagination buttons Prev and Next */
   function updatePagination() {
     pagination.innerHTML = "";
 
     const totalPages = Math.ceil(filteredBooksData.length / booksPerPage);
 
-    // Prev Button
+    /* prev button */
     const prevButton = document.createElement("button");
     prevButton.className = "prev";
     prevButton.textContent = "Prev";
@@ -121,16 +118,9 @@
       currentPage--;
       displayPage();
     });
-
     pagination.appendChild(prevButton);
 
-    // Pagination Numbers
-    const visiblePages = getVisiblePages(totalPages);
-    visiblePages.forEach((num) => {
-      pagination.appendChild(createPageNumber(num));
-    });
-
-    // Next Button
+    /* next button */
     const nextButton = document.createElement("button");
     nextButton.className = "next";
     nextButton.textContent = "Next";
@@ -142,52 +132,7 @@
     pagination.appendChild(nextButton);
   }
 
-  function getVisiblePages(totalPages) {
-    const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
-
-    const visiblePages = [];
-
-    if (currentPage < 3) {
-      return pageNumbers.slice(0, 5);
-    } else if (currentPage >= totalPages - 3) {
-      return pageNumbers.slice(totalPages - 5);
-    } else {
-      visiblePages.push(1);
-      if (currentPage > 3) visiblePages.push("...");
-      visiblePages.push(currentPage - 1, currentPage, currentPage + 1);
-      if (currentPage < totalPages - 2) visiblePages.push("...");
-      visiblePages.push(totalPages);
-      return visiblePages.filter((item, index) => {
-        return (
-          index === 0 || index === visiblePages.length - 1 || item !== "..."
-        );
-      });
-    }
-  }
-
-  function createPageNumber(num) {
-    const pageNumberButton = document.createElement("button");
-    if (num === "...") {
-      pageNumberButton.textContent = "...";
-      pageNumberButton.disabled = true;
-    } else {
-      pageNumberButton.textContent = num;
-      pageNumberButton.onclick = () => {
-        currentPage = num - 1;
-        displayPage();
-      };
-    }
-
-    if (num === currentPage + 1) {
-      pageNumberButton.classList.add("active");
-    }
-
-    return pageNumberButton;
-  }
-
+  /* function to populate genres in the genre filter dropdown */
   function populateGenres() {
     const genres = new Set();
     booksData.forEach((book) => {
@@ -202,11 +147,12 @@
     });
   }
 
-  search_input.addEventListener("input", (event) => {
+  /* event listener for search input */
+  search_input.addEventListener("input", () => {
     filterBooks();
   });
 
-  genre_filter.addEventListener("change", (event) => {
+  genre_filter.addEventListener("change", () => {
     filterBooks();
   });
 
@@ -223,8 +169,10 @@
     });
 
     currentPage = 0;
+    /* display filtered books */
     displayPage();
   }
 
+  /* fetch books when page loads */
   await fetchBooks();
 })();

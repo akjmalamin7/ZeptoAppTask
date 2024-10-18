@@ -15,7 +15,6 @@
 .section_title h1 {
   font-size: 26px;
   line-height: 36px;
-  /* color: var(--section_title_color); */
 }
 .search_box_wrapper,
 .filter {
@@ -51,7 +50,7 @@
 .book_info {
   margin-top: 20px;
 }
-.book_info h3 {
+.book_info h3 a {
   font-size: 18px;
   line-height: 28px;
   font-weight: 650;
